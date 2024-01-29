@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Teacher {
+  id        Int        @id @default(autoincrement())
+  firstname String     @db.VarChar(30)
+  tCode     String     @unique @map("t_code") @db.VarChar(4)
+  password  String     @db.VarChar(72)
+  email     String?    @db.VarChar(40)
+  homeworks Homework[]
+}
+
+model Subject {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  homeworks   Homework[]
+}
+
+model Homework {
+  id          Int      @id @default(autoincrement())
+  question    String   @db.Text
+  imgUrl      String   @map("img_url")
+  startdate   DateTime @db.Date
+  duedate     DateTime @db.Date
+  isPublished Boolean  @default(false) @map("is_published")
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  subjectId   Int      @map("subject_id")
+  teacher     Teacher  @relation(fields: [teacherId], references: [id])
+  teacherId   Int      @map("teacher_id")
+  answers     Answer[]
+}
+
+model Answer {
+  id          Int      @id @default(autoincrement())
+  answerText  String?  @map("answer_text") @db.Text
+  score       Float?   @db.Float
+  isSubmitted Boolean  @default(false) @map("is_submitted")
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId   Int      @map("student_id")
+  homework    Homework @relation(fields: [homeworkId], references: [id])
+  homeworkId  Int      @map("homework_id")
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  firstname String   @db.VarChar(30)
+  sCode     String   @unique @map("s_code") @db.VarChar(4)
+  password  String   @db.VarChar(72)
+  email     String?  @db.VarChar(40)
+  answers   Answer[]
+}
