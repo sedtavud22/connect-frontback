@@ -8,4 +8,5 @@ service api
 
 path            method    params   body
 /auth/register  POST      none     { sCode, password, confirmPassword, firstname, email}
-/auth/login     POST      none     { tCode or sCode, password}        
+/auth/login     POST      none     { tCode or sCode, password} 
+/auth/me        GET       none     -       

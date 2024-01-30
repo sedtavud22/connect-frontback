@@ -4,6 +4,7 @@ const cors = require("cors");
 const notFoundMiddleware = require("./middlewares/not-found");
 const errorMiddleware = require("./middlewares/error");
 const authRouter = require("./routes/auth-route");
+const authenticate = require("./middlewares/authenticate");
 
 const app = express();
 
