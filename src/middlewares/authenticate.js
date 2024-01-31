@@ -7,20 +7,20 @@ module.exports = catchAsync(async (req, res, next) => {
   if (!authorization) {
     const error = new Error("unauthorized");
     error.statusCode = 401;
-    next(error);
+    return next(error);
   }
 
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") {
     const error = new Error("unauthorized");
     error.statusCode = 401;
-    next(error);
+    return next(error);
   }
 
   if (!token) {
     const error = new Error("unauthorized");
     error.statusCode = 401;
-    next(error);
+    return next(error);
   }
 
   const { id, sCode, tCode } = jwt.verify(token, process.env.JWT_SECRET);
@@ -38,6 +38,7 @@ module.exports = catchAsync(async (req, res, next) => {
       });
 
   delete result.password;
+  result.role = tCode ? "teacher" : "student";
 
   req.user = result;
 

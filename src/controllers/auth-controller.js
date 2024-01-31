@@ -9,13 +9,13 @@ exports.register = catchAsync(async (req, res, next) => {
   if (!(sCode && password && confirmPassword && firstname)) {
     const error = new Error("please fill all blank inputs");
     error.statusCode = 400;
-    throw error;
+    return next(error);
   }
 
   if (password !== confirmPassword) {
     const error = new Error("password does not match");
     error.statusCode = 400;
-    throw error;
+    return next(error);
   }
 
   const { confirmPassword: cfpw, ...data } = req.body;
@@ -36,19 +36,19 @@ exports.login = catchAsync(async (req, res, next) => {
   if (sCode && tCode) {
     const error = new Error("2 roles?");
     error.statusCode = 400;
-    throw error;
+    return next(error);
   }
 
   if (sCode && !/^[s]\d{3}$/.test(sCode)) {
     const error = new Error("invalid code format");
     error.statusCode = 400;
-    throw error;
+    return next(error);
   }
 
   if (tCode && !/^[t]\d{3}$/.test(tCode)) {
     const error = new Error("invalid code format");
     error.statusCode = 400;
-    throw error;
+    return next(error);
   }
 
   const result = tCode
@@ -67,7 +67,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!isCorrect) {
     const error = new Error("invalid credentials");
     error.statusCode = 400;
-    throw error;
+    return next(error);
   }
 
   const payload = tCode

@@ -29,7 +29,7 @@ model Subject {
 model Homework {
   id          Int      @id @default(autoincrement())
   question    String   @db.Text
-  imgUrl      String   @map("img_url")
+  imgUrl      String?  @map("img_url")
   startdate   DateTime @db.Date
   duedate     DateTime @db.Date
   isPublished Boolean  @default(false) @map("is_published")
