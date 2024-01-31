@@ -11,4 +11,7 @@ path            method    authen    params   body
 /auth/login     POST        0       none     { tCode or sCode, password} 
 /auth/me        GET        t,s      none     -
 /homework       POST        t       none     { question, startdate, duedate, isPublished, subjectId, teacherId}
-/subject        GET         0       none     -     
+/homework       GET         t       none     -
+/homework       PUT         t       :id      { question, startdate, duedate, isPublished, subjectId, teacherId}
+/homework       DELETE      t       :id      -
+/subject        GET         0       none     -

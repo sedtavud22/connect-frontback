@@ -13,11 +13,52 @@ exports.createHomework = catchAsync(async (req, res, next) => {
   const newHomework = await db.homework.create({
     data: {
       ...req.body,
+      subjectId: +subjectId,
       teacherId: req.user.id,
-      startdate: new Date(startdate),
-      duedate: new Date(duedate),
     },
   });
 
-  res.status(200).json({ homework: newHomework });
+  res.status(201).json({ homework: newHomework });
+});
+
+exports.getByTeacher = catchAsync(async (req, res, next) => {
+  const homeworks = await db.homework.findMany({
+    where: {
+      teacherId: req.user.id,
+    },
+    include: {
+      subject: {
+        select: {
+          title: true,
+        },
+      },
+    },
+  });
+  res.status(200).json({ homeworks });
+});
+
+exports.updateHomework = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { question, startdate, duedate, isPublished, subjectId } = req.body;
+  const homework = await db.homework.update({
+    where: {
+      id: +id,
+    },
+    data: {
+      ...req.body,
+      subjectId: +subjectId,
+      teacherId: req.user.id,
+    },
+  });
+  res.status(200).json({ homework });
+});
+
+exports.deleteHomework = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  await db.homework.delete({
+    where: {
+      id: +id,
+    },
+  });
+  res.status(204).json();
 });
